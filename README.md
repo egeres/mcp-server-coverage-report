@@ -1,32 +1,23 @@
-# Minimal MCP Server Boilerplate
+# MCP Server Coverage Report
 
-A minimal Python MCP (Model Context Protocol) server example with a simple `add` function.
+An MCP server to manage and display code coverage reports with [coveragepy](github.com/coveragepy/coveragepy). This server provides tools to view coverage statistics and identify lines missing test coverage in your codebase. This can be used in conjunction with prompts like:
 
-## Features
+> Increase the coverage of the functions in the plot module of my project
 
-- Simple `add(a: int, b: int) -> int` function that adds two integers
-- Uses `uv` for dependency management
-- Runs via stdio (use with `uvx`)
 
-## Setup
 
-1. Install dependencies:
-   ```bash
-   uv sync
-   ```
+The following tools are provided:
 
-2. Test the server locally:
-   ```bash
-   uv run mcp-server-coverage-report
-   ```
+- **`show_global_coverage`**: Generates a coverage report displaying all files and their coverage percentages, including information about missing lines.
+- **`show_missing_lines`**: Shows the actual code content for lines that are missing test coverage from a specific file, grouped into ranges for consecutive missing lines.
 
-## Using with Cursor
 
-To configure Cursor to use this MCP server, add the following to your Cursor MCP settings.
 
-### Option 1: Using uvx (Recommended)
+This package also assumes that there is a `.coverage` file that has been generated in your project as an artifact from executing [pytest-cov](https://github.com/pytest-dev/pytest-cov), read their guide on how to configure it if it's the first time you look into code coverage
 
-Add to your Cursor MCP configuration (usually in Cursor settings or `.cursor/mcp.json`):
+
+
+You can add it to your Cursor MCP configuration (usually in Cursor settings or `.cursor/mcp.json`):
 
 ```json
 {
@@ -34,8 +25,6 @@ Add to your Cursor MCP configuration (usually in Cursor settings or `.cursor/mcp
     "mcp-server-coverage-report": {
       "command": "uvx",
       "args": [
-        "--from",
-        "/mnt/c/Github/mcp-server-coverage-report",
         "mcp-server-coverage-report"
       ]
     }
@@ -43,32 +32,7 @@ Add to your Cursor MCP configuration (usually in Cursor settings or `.cursor/mcp
 }
 ```
 
-**Note:** Update the path `/mnt/c/Github/mcp-server-coverage-report` to match your actual project directory.
+`uvx` is a tool from the `uv` package manager that allows you to run Python packages without installing them globally. In case you don't have `uv`, just run `pip install uv`
 
-### Option 2: Using uv run
 
-Alternatively, you can use `uv run`:
 
-```json
-{
-  "mcpServers": {
-    "mcp-server-coverage-report": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory",
-        "/mnt/c/Github/mcp-server-coverage-report",
-        "mcp-server-coverage-report"
-      ]
-    }
-  }
-}
-```
-
-After adding the configuration, restart Cursor for the changes to take effect.
-
-## Development
-
-- Install new dependencies: `uv add <package-name>`
-- Run the server: `uv run mcp-server-coverage-report`
-- The server exposes one tool: `add` which takes two integers and returns their sum
